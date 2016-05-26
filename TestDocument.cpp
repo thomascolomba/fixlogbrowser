@@ -529,6 +529,61 @@ bool test_getFollowingRelevantMsgFixAfterMarketDataRequestWithTwoMarketDataReque
 
 
 
+////////////////////////////////////////////////////////////////////////
+// testGetFollowingMsgFixBasedOnSymbol
+////////////////////////////////////////////////////////////////////////
+
+bool performAGetFollowingMsgFixBasedOnSymbol(std::vector<MsgFixBounds*>* a_msgFixList, int a_currentMsgFixIndex, AbstractDocument& a_document, unsigned int* a_expectedMsgFixIndex){
+	unsigned int* l_actualMsgFixIndex = AbstractDocumentHelper::getFollowingMsgFixBasedOnSymbol(a_msgFixList, a_currentMsgFixIndex, a_document);
+	if(l_actualMsgFixIndex == NULL && a_expectedMsgFixIndex == NULL){
+		return true;
+	}
+	return (*l_actualMsgFixIndex == *a_expectedMsgFixIndex);
+}
+
+bool test_getFollowingMsgFixBasedOnSymbolWithoutMessageWithCorrespondingSymbol(){
+	std::vector<MsgFixBounds*>* l_realMsgFixList = new std::vector<MsgFixBounds*>;
+	l_realMsgFixList->push_back(new MsgFixBounds(3,33));
+	l_realMsgFixList->push_back(new MsgFixBounds(40, 70));
+	l_realMsgFixList->push_back(new MsgFixBounds(71, 101));
+	std::vector<char*>* l_lines = new std::vector<char*>;
+	l_lines->push_back("bla8=FIX...|35=W|55=EURUSD|10=000|3.1416");
+	l_lines->push_back("8=FIX...|35=W|55=USDJPY|10=000|");
+	l_lines->push_back("8=FIX...|35=W|55=AUDCAD|10=000|");
+	AbstractDocument* l_document = new DocumentSimple(l_lines);
+	//unsigned int l_expectedValue = 0;
+	return performAGetFollowingMsgFixBasedOnSymbol(l_realMsgFixList, 0, *l_document, NULL);
+}
+bool test_getFollowingMsgFixBasedOnSymbolWithOneMessageWithCorrespondingSymbol(){
+	std::vector<MsgFixBounds*>* l_realMsgFixList = new std::vector<MsgFixBounds*>;
+	l_realMsgFixList->push_back(new MsgFixBounds(3,33));
+	l_realMsgFixList->push_back(new MsgFixBounds(40, 70));
+	l_realMsgFixList->push_back(new MsgFixBounds(71, 101));
+	std::vector<char*>* l_lines = new std::vector<char*>;
+	l_lines->push_back("bla8=FIX...|35=W|55=EURUSD|10=000|3.1416");
+	l_lines->push_back("8=FIX...|35=W|55=USDJPY|10=000|");
+	l_lines->push_back("8=FIX...|35=W|55=EURUSD|10=000|");
+	AbstractDocument* l_document = new DocumentSimple(l_lines);
+	unsigned int l_expectedValue = 2;
+	return performAGetFollowingMsgFixBasedOnSymbol(l_realMsgFixList, 0, *l_document, &l_expectedValue);
+}
+
+bool test_getFollowingMsgFixBasedOnSymbolWithTwoMessagesWithCorrespondingSymbol(){
+	std::vector<MsgFixBounds*>* l_realMsgFixList = new std::vector<MsgFixBounds*>;
+	l_realMsgFixList->push_back(new MsgFixBounds(3,33));
+	l_realMsgFixList->push_back(new MsgFixBounds(40, 70));
+	l_realMsgFixList->push_back(new MsgFixBounds(71, 101));
+	std::vector<char*>* l_lines = new std::vector<char*>;
+	l_lines->push_back("bla8=FIX...|35=W|55=EURUSD|10=000|3.1416");
+		l_lines->push_back("8=FIX...|35=W|55=EURUSD|10=000|");
+		l_lines->push_back("8=FIX...|35=W|55=EURUSD|10=000|");
+	AbstractDocument* l_document = new DocumentSimple(l_lines);
+	unsigned int l_expectedValue = 1;
+	return performAGetFollowingMsgFixBasedOnSymbol(l_realMsgFixList, 0, *l_document, &l_expectedValue);
+}
+
+
+
 
 bool testGetFollowingRelevantMsgFixAfterNewOrderSingle(){
 	if(test_getFollowingRelevantMsgFixAfterNewOrderSingleWithoutER() == false){
@@ -584,8 +639,29 @@ bool testGetFollowingRelevantMsgFixAfterMarketDataRequest(){
 	return true;
 }
 
+bool testGetFollowingMsgFixBasedOnSymbol(){
+
+	if(test_getFollowingMsgFixBasedOnSymbolWithoutMessageWithCorrespondingSymbol() == false){
+		printf("fail test test_getFollowingMsgFixBasedOnSymbolWithoutMessageWithCorrespondingSymbol\n");
+		return false;
+	}
+
+	if(test_getFollowingMsgFixBasedOnSymbolWithOneMessageWithCorrespondingSymbol() == false){
+		printf("fail test test_getFollowingMsgFixBasedOnSymbolWithOneMessageWithCorrespondingSymbol\n");
+		return false;
+	}
+
+	if(test_getFollowingMsgFixBasedOnSymbolWithTwoMessagesWithCorrespondingSymbol() == false){
+		printf("fail test test_getFollowingMsgFixBasedOnSymbolWithTwoMessagesWithCorrespondingSymbol\n");
+		return false;
+	}
+
+	return true;
+}
+
 
 int main(){
+
 	if(!testExtractMsgFixBoundsFromLine())
 		return 0;
 
@@ -605,6 +681,9 @@ int main(){
 		return 0;
 
 	if(!testGetFollowingRelevantMsgFixAfterMarketDataRequest())
+		return 0;
+
+	if(!testGetFollowingMsgFixBasedOnSymbol())
 		return 0;
 
 	printf("unit tests passed successfully\n");

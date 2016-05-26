@@ -147,6 +147,7 @@ bool AbstractDocumentHelper::isMarketDataRequestAnUnsubscription(MsgFixBounds* a
 	return (strcmp(l_fieldValue, "2") == 0);
 }
 
+
 std::vector<char*>* AbstractDocumentHelper::getMsgTypesOfFollowingMsgTypeInWorkflow(char* a_msgType){
 	/*std::vector<char*>* l_msgTypes = new std::vector<char*>;
 	if(strcmp(a_msgType, MsgFixBounds::marketDataRequest_msgType) == 0){
@@ -175,32 +176,45 @@ std::vector<char*>* AbstractDocumentHelper::getMsgTypesOfFollowingMsgTypeInWorkf
 	return NULL;
 }
 
+//returns the following relevant message based on message type if it exists, else it returns the following message refering to the same symbol if it exists, else it returns NULL
 unsigned int* AbstractDocumentHelper::getFollowingRelevantMsgFix(std::vector<MsgFixBounds*>* a_msgFixList, int a_currentMsgFixIndex, const AbstractDocument& a_document){
 	/*char* l_currentMsgType = AbstractDocumentHelper::getMsgType(a_currentMsgFix, a_document);
-		if(l_currentMsgType == NULL){
-			return NULL;
-		}
+	unsigned int* l_nextRelevantMsgFix = NULL;
+	if(l_currentMsgType != NULL){//search next relevant message based on message type
 		if(strcmp(l_currentMsgType, MsgFixBounds::marketDataRequest_msgType) == 0){//market data request
-			bool l_subscriptionRequest = true;//todo thomas
-			if(l_subscriptionRequest){//subscription
-				return getFollowingRelevantMsgFixAfterMarketDataRequest(a_currentMsgFix, a_document);
-			} else {//unsubscription
-				return getFollowingRelevantMsgFixAfterCancelMarketDataRequest(a_currentMsgFix, a_document);
-			}
+			l_nextRelevantMsgFix = getFollowingRelevantMsgFixAfterMarketDataRequest(a_currentMsgFix, a_document);
 		} else if(strcmp(l_currentMsgType, MsgFixBounds::marketDataRequestReject_msgType) == 0){
-			return getFollowingRelevantMsgFixAfterMarketDataRequestReject(a_currentMsgFix, a_document);
+			l_nextRelevantMsgFix = getFollowingRelevantMsgFixAfterMarketDataRequestReject(a_currentMsgFix, a_document);
 		} else if(strcmp(l_currentMsgType, MsgFixBounds::marketDataSnapshot_msgType) == 0){
-			return getFollowingRelevantMsgFixAfterMarketDataSnapshot(a_currentMsgFix, a_document);
+			l_nextRelevantMsgFix = getFollowingRelevantMsgFixAfterMarketDataSnapshot(a_currentMsgFix, a_document);
 		} else if(strcmp(l_currentMsgType, MsgFixBounds::marketDataResponse_msgType) == 0){
-			return getFollowingRelevantMsgFixAfterMarketDataResponse(a_currentMsgFix, a_document);
+			l_nextRelevantMsgFix = getFollowingRelevantMsgFixAfterMarketDataResponse(a_currentMsgFix, a_document);
 		} else if(strcmp(l_currentMsgType, MsgFixBounds::newOrderSingle_msgType) == 0){
-			return getFollowingRelevantMsgFixAfterNewOrderSingle(a_currentMsgFix, a_document);
-		}//..todo thomas complete with other fix message such as order cancel request...
-		else{
-			printf("internal plugin error : unsupported message type : %s, msgfix : [%i, %i]\nCan you please copy/paste this message and the content of your document on the forum ?", l_currentMsgType, a_currentMsgFix->getStartPosition(, a_currentMsgFix->getEndPosition()));
+			l_nextRelevantMsgFix = getFollowingRelevantMsgFixAfterNewOrderSingle(a_currentMsgFix, a_document);
 		}
-		//std::vector<char*> l_possibleNextMsgTypes = AbstractDocumentHelper::getMsgTypesOfFollowingMsgTypeInWorkflow(l_currentMsgType);
-*/
+	}
+	if(l_nextRelevantMsgFix != NULL){
+		return l_nextRelevantMsgFix;
+	}
+	l_nextRelevantMsgFix = getFollowingMsgFixBasedOnSymbol(a_msgFixList, a_currentMsgFixIndex, a_document);
+	if(l_nextRelevantMsgFix != NULL){
+		return l_nextRelevantMsgFix;
+	}*/
+	return NULL;
+}
+
+unsigned int* AbstractDocumentHelper::getFollowingMsgFixBasedOnSymbol(std::vector<MsgFixBounds*>* a_msgFixList, int a_currentMsgFixIndex, const AbstractDocument& a_document){
+	char* l_symbol = getFieldValue(a_msgFixList->at(a_currentMsgFixIndex), a_document, MsgFixBounds::symbol_key);
+	if(l_symbol == NULL){
+		return NULL;
+	}
+	char* b_symbol = NULL;
+	for(unsigned int b_msgFixIndex = a_currentMsgFixIndex+1; b_msgFixIndex < a_msgFixList->size(); b_msgFixIndex++){
+		b_symbol = getFieldValue(a_msgFixList->at(b_msgFixIndex), a_document, MsgFixBounds::symbol_key);
+		if(b_symbol != NULL && strcmp(l_symbol, b_symbol) == 0){
+			return new unsigned int(b_msgFixIndex);
+		}
+	}
 	return NULL;
 }
 

@@ -47,6 +47,7 @@ class MsgFixBounds {
 		static char* clOrdID_key;
 		static char* msgType_key;
 		static char* subscriptionRequestType_key;
+		static char* symbol_key;
 
 		static char* marketDataRequest_msgType;
 		static char* cancelMarketDataRequest_msgType;

@@ -64,6 +64,7 @@ char* MsgFixBounds::OrderID_key = "37";
 char* MsgFixBounds::clOrdID_key = "11";
 char* MsgFixBounds::msgType_key = "35";
 char* MsgFixBounds::subscriptionRequestType_key = "263";
+char* MsgFixBounds::symbol_key = "55";
 
 char* MsgFixBounds::marketDataRequest_msgType = "V";
 char* MsgFixBounds::cancelMarketDataRequest_msgType = "V";
