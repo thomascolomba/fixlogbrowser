@@ -3,7 +3,7 @@ NOTEPAD_EXECUTABLE=/home/thomas/.wine/dosdevices/c\:/Program\ Files/Notepad++/no
 PATH_TO_NOTEPAD_PLUGINS_DIRECTORY=/home/thomas/.wine/dosdevices/c\:/Program\ Files/Notepad++/plugins/
 
 CXX=wine mingw32-c++.exe
-CXXFLAGS=-W -Wall -Wno-write-strings -DUNICODE
+CXXFLAGS=-W -Wall -Wno-write-strings -DUNICODE -Wunused-parameter
 LDFLAGS=-shared -Wl,--out-implib,my_plugin_dll.a
 LDLIBS=
 DLL=my_plugin.dll

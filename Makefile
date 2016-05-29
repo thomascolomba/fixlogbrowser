@@ -3,7 +3,7 @@ NOTEPAD_EXECUTABLE=C:\Users\thomas\Desktop\notepad++\notepad++.exe
 PATH_TO_NOTEPAD_PLUGINS_DIRECTORY=C:\Users\thomas\Desktop\notepad++\plugins\
 
 CXX=mingw32-c++.exe
-CXXFLAGS=-W -Wall -Wno-write-strings -DUNICODE
+CXXFLAGS=-W -Wall -Wno-write-strings -DUNICODE -Wunused-parameter
 LDFLAGS=-shared -Wl,--out-implib,my_plugin_dll.a
 LDLIBS=
 DLL=my_plugin.dll

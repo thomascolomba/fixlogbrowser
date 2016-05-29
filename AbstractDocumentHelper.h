@@ -13,7 +13,7 @@ public:
 	static char* getMsgType(MsgFixBounds* a_msgFix, const AbstractDocument& a_abstractDocument);
 	static char* getFieldValue(MsgFixBounds* a_msgFix, const AbstractDocument& a_abstractDocument, char* a_fieldId);
 	static unsigned long getTotalLength(std::vector<MsgFixBounds*>* a_msgFixList);
-	static std::vector<char*>* getMsgTypesOfFollowingMsgTypeInWorkflow(char* a_msgType);
+	//static std::vector<char*>* getMsgTypesOfFollowingMsgTypeInWorkflow(char* a_msgType);
 	static bool isMarketDataRequestAnUnsubscription(MsgFixBounds* a_marketDataRequestFix, const AbstractDocument& a_document);
 	static unsigned int* getFollowingRelevantMsgFix(std::vector<MsgFixBounds*>* a_msgFixList, int a_currentMsgFixIndex, const AbstractDocument& a_document);//returns the following relevant fix message according to the user, if such message exists, NULL otherwise
 	static unsigned int* getFollowingMsgFixBasedOnSymbol(std::vector<MsgFixBounds*>* a_msgFixList, int a_currentMsgFixIndex, const AbstractDocument& a_document);//returns the following message according to the current symbol tag if it exists, NULL otherwise

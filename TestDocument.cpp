@@ -582,7 +582,58 @@ bool test_getFollowingMsgFixBasedOnSymbolWithTwoMessagesWithCorrespondingSymbol(
 	return performAGetFollowingMsgFixBasedOnSymbol(l_realMsgFixList, 0, *l_document, &l_expectedValue);
 }
 
+////////////////////////////////////////////////////////////////////////
+// testGetFollowingRelevantMsgFix
+////////////////////////////////////////////////////////////////////////
 
+bool performAGetFollowingRelevantMsgFix(std::vector<MsgFixBounds*>* a_msgFixList, int a_currentMsgFixIndex, AbstractDocument& a_document, unsigned int* a_expectedMsgFixIndex){
+	unsigned int* l_actualMsgFixIndex = AbstractDocumentHelper::getFollowingRelevantMsgFix(a_msgFixList, a_currentMsgFixIndex, a_document);
+	if(l_actualMsgFixIndex == NULL && a_expectedMsgFixIndex == NULL){
+		return true;
+	}
+	return (*l_actualMsgFixIndex == *a_expectedMsgFixIndex);
+}
+
+bool test_getFollowingRelevantMsgFixForMarketDataRequestFollowedByCorrespondingMarketDataSnapshot(){
+	std::vector<MsgFixBounds*>* l_realMsgFixList = new std::vector<MsgFixBounds*>;
+	l_realMsgFixList->push_back(new MsgFixBounds(3,43));
+	l_realMsgFixList->push_back(new MsgFixBounds(50, 80));
+	l_realMsgFixList->push_back(new MsgFixBounds(81, 121));
+	std::vector<char*>* l_lines = new std::vector<char*>;
+	l_lines->push_back("bla8=FIX...|35=V|55=EURUSD|262=00003|10=000|3.1416");
+	l_lines->push_back("8=FIX...|35=D|55=EURUSD|10=000|");
+	l_lines->push_back("8=FIX...|35=W|55=EURUSD|262=00003|10=000|");
+	AbstractDocument* l_document = new DocumentSimple(l_lines);
+	unsigned int l_expectedValue = 2;
+	return performAGetFollowingRelevantMsgFix(l_realMsgFixList, 0, *l_document, &l_expectedValue);
+}
+bool test_getFollowingRelevantMsgFixForMarketDataRequestFollowedByAMsgWithSameSymbolAndANotCorrespondingMarketDataSnapshot(){
+	std::vector<MsgFixBounds*>* l_realMsgFixList = new std::vector<MsgFixBounds*>;
+	l_realMsgFixList->push_back(new MsgFixBounds(3,43));
+	l_realMsgFixList->push_back(new MsgFixBounds(50, 80));
+	l_realMsgFixList->push_back(new MsgFixBounds(81, 121));
+	std::vector<char*>* l_lines = new std::vector<char*>;
+	l_lines->push_back("bla8=FIX...|35=V|55=EURUSD|262=00003|10=000|3.1416");
+	l_lines->push_back("8=FIX...|35=D|55=EURUSD|10=000|");
+	l_lines->push_back("8=FIX...|35=W|55=EURUSD|262=00004|10=000|");
+	AbstractDocument* l_document = new DocumentSimple(l_lines);
+	unsigned int l_expectedValue = 1;
+	return performAGetFollowingRelevantMsgFix(l_realMsgFixList, 0, *l_document, &l_expectedValue);
+}
+
+bool test_getFollowingRelevantMsgFixForNewOrderSingleWithOtherMsgNotCorresponding(){
+	std::vector<MsgFixBounds*>* l_realMsgFixList = new std::vector<MsgFixBounds*>;
+		l_realMsgFixList->push_back(new MsgFixBounds(3,43));
+		l_realMsgFixList->push_back(new MsgFixBounds(50, 80));
+		l_realMsgFixList->push_back(new MsgFixBounds(81, 121));
+		std::vector<char*>* l_lines = new std::vector<char*>;
+		l_lines->push_back("bla8=FIX...|35=V|55=EURUSD|262=00003|10=000|3.1416");
+		l_lines->push_back("8=FIX...|35=D|55=USDCAD|10=000|");
+		l_lines->push_back("8=FIX...|35=W|55=USDCAD|262=00005|10=000|");
+		AbstractDocument* l_document = new DocumentSimple(l_lines);
+		//unsigned int l_expectedValue = 1;
+		return performAGetFollowingRelevantMsgFix(l_realMsgFixList, 0, *l_document, NULL);
+}
 
 
 bool testGetFollowingRelevantMsgFixAfterNewOrderSingle(){
@@ -659,6 +710,26 @@ bool testGetFollowingMsgFixBasedOnSymbol(){
 	return true;
 }
 
+bool testGetFollowingRelevantMsgFix(){
+
+	if(test_getFollowingRelevantMsgFixForMarketDataRequestFollowedByCorrespondingMarketDataSnapshot() == false){
+		printf("fail test test_getFollowingRelevantMsgFixForMarketDataRequestFollowedByCorrespondingMarketDataSnapshot\n");
+		return false;
+	}
+
+	if(test_getFollowingRelevantMsgFixForMarketDataRequestFollowedByAMsgWithSameSymbolAndANotCorrespondingMarketDataSnapshot() == false){
+		printf("fail test test_getFollowingRelevantMsgFixForMarketDataRequestFollowedByAMsgWithSameSymbolAndANotCorrespondingMarketDataSnapshot\n");
+		return false;
+	}
+
+	if(test_getFollowingRelevantMsgFixForNewOrderSingleWithOtherMsgNotCorresponding() == false){
+		printf("fail test test_getFollowingRelevantMsgFixForNewOrderSingleWithOtherMsgNotCorresponding\n");
+		return false;
+	}
+
+	return true;
+}
+
 
 int main(){
 
@@ -685,6 +756,11 @@ int main(){
 
 	if(!testGetFollowingMsgFixBasedOnSymbol())
 		return 0;
+
+	if(!testGetFollowingRelevantMsgFix())
+		return 0;
+
+
 
 	printf("unit tests passed successfully\n");
 	return 0;

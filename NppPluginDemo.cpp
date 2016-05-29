@@ -23,7 +23,7 @@ extern FuncItem			funcItem[1];
 HANDLE				g_hModule			= NULL;
 
 void toggleView(void){
-	printf("---TCO toggleView");
+
 }
 
 BOOL APIENTRY DllMain( HANDLE hModule, 

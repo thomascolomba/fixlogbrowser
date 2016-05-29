@@ -28,7 +28,7 @@
 //
 // The plugin data that Notepad++ needs
 //
-FuncItem funcItem[11];
+FuncItem funcItem[12];
 
 //
 // The data of Notepad++ that you can use in your plugin commands
@@ -182,6 +182,40 @@ void extractOT(){
 	extractMessage("OT");
 }
 
+void goToFollowingRelevantMessage(){
+	//1)compute fix message List
+	AbstractDocument* l_document = new NppDocument(nppData);
+	std::vector<MsgFixBounds*>* l_msgFixList = AbstractDocumentHelper::extractAllMsgFixFromDocument(*l_document);
+	if(l_msgFixList == NULL){
+		printf("No fix msg on this document");
+		return;
+	}
+	//2)is there a fix msg on the current line ?
+	int currentLine = ::SendMessage(nppData._nppHandle, NPPM_GETCURRENTLINE, 0, 0);// Line position of the cursor in the editor
+	long startPositionOfTheCurrentLine = l_document->getStartPositionOfLine(currentLine);
+	printf("---currentLine = %i\n", currentLine);
+	printf("---startPositionOfTheCurrentLine = %i\n", startPositionOfTheCurrentLine);
+	char* l_lineContent = l_document->getLine(currentLine);
+	printf("---l_lineContent = %s\n", l_lineContent);
+	//MsgFixBounds* l_currentMsgFix = AbstractDocumentHelper::extractMsgFixBoundsFromLine(l_lineContent, (long)currentLine);//(long)startPositionOfTheCurrentLine);
+	MsgFixBounds* l_currentMsgFix = AbstractDocumentHelper::extractMsgFixBoundsFromLine(l_lineContent, (long)startPositionOfTheCurrentLine);
+	if(l_currentMsgFix == NULL){
+		printf("No fix message on the current line");
+		return;
+	}
+	MsgFixBounds::printToConsole(l_currentMsgFix);
+	//3) search index of current fix message among fix messages list
+	unsigned int l_indexOfCurrentMsg = 0;
+	for(unsigned int b_indexFixMsg = 0; b_indexFixMsg < l_msgFixList->size(); b_indexFixMsg++){
+		if((*l_currentMsgFix)==*(l_msgFixList->at(b_indexFixMsg))){
+			l_indexOfCurrentMsg = b_indexFixMsg;
+			printf("current msg found : %i\n", l_indexOfCurrentMsg);
+		}
+	}
+	//4)search following relevant msg
+
+}
+
 /*void goToLine(){
 	deplaceCursorAtLine(60);
 }*/
@@ -270,7 +304,14 @@ void commandMenuInit()
 	shortcutForFeat9->_isCtrl = false;
 	shortcutForFeat9->_isShift = false;
 	shortcutForFeat9->_key = 0x51;//Q*/
-	setCommand(10, TEXT("highlighting"), highlighting, NULL, false);
+	//setCommand(10, TEXT("highlighting"), highlighting, NULL, false);
+
+	ShortcutKey* shortcutForFeat11 = new ShortcutKey;
+	shortcutForFeat11->_isAlt = true;
+	shortcutForFeat11->_isCtrl = false;
+	shortcutForFeat11->_isShift = false;
+	shortcutForFeat11->_key = 0x48;//N
+	setCommand(10, TEXT("Go to following relevant message"), goToFollowingRelevantMessage, shortcutForFeat11, false);
     
 }
 

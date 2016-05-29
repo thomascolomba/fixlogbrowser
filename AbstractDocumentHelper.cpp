@@ -148,8 +148,8 @@ bool AbstractDocumentHelper::isMarketDataRequestAnUnsubscription(MsgFixBounds* a
 }
 
 
-std::vector<char*>* AbstractDocumentHelper::getMsgTypesOfFollowingMsgTypeInWorkflow(char* a_msgType){
-	/*std::vector<char*>* l_msgTypes = new std::vector<char*>;
+/*std::vector<char*>* AbstractDocumentHelper::getMsgTypesOfFollowingMsgTypeInWorkflow(char* a_msgType){
+	std::vector<char*>* l_msgTypes = new std::vector<char*>;
 	if(strcmp(a_msgType, MsgFixBounds::marketDataRequest_msgType) == 0){
 		l_msgTypes.push_back(MsgFixBounds::cancelMarketDataRequest_msgType);//unsubscribing
 		l_msgTypes.push_back(MsgFixBounds::marketDataSnapshot_msgType);//prices sent
@@ -172,34 +172,32 @@ std::vector<char*>* AbstractDocumentHelper::getMsgTypesOfFollowingMsgTypeInWorkf
 	}else {
 		//nothing
 	}
-	return l_msgTypes;*/
+	return l_msgTypes;
 	return NULL;
-}
+}*/
 
 //returns the following relevant message based on message type if it exists, else it returns the following message refering to the same symbol if it exists, else it returns NULL
 unsigned int* AbstractDocumentHelper::getFollowingRelevantMsgFix(std::vector<MsgFixBounds*>* a_msgFixList, int a_currentMsgFixIndex, const AbstractDocument& a_document){
-	/*char* l_currentMsgType = AbstractDocumentHelper::getMsgType(a_currentMsgFix, a_document);
+	char* l_currentMsgType = AbstractDocumentHelper::getMsgType(a_msgFixList->at(a_currentMsgFixIndex), a_document);
 	unsigned int* l_nextRelevantMsgFix = NULL;
 	if(l_currentMsgType != NULL){//search next relevant message based on message type
 		if(strcmp(l_currentMsgType, MsgFixBounds::marketDataRequest_msgType) == 0){//market data request
-			l_nextRelevantMsgFix = getFollowingRelevantMsgFixAfterMarketDataRequest(a_currentMsgFix, a_document);
+			l_nextRelevantMsgFix = AbstractDocumentHelper::getFollowingRelevantMsgFixAfterMarketDataRequest(a_msgFixList, a_currentMsgFixIndex, a_document);
 		} else if(strcmp(l_currentMsgType, MsgFixBounds::marketDataRequestReject_msgType) == 0){
-			l_nextRelevantMsgFix = getFollowingRelevantMsgFixAfterMarketDataRequestReject(a_currentMsgFix, a_document);
-		} else if(strcmp(l_currentMsgType, MsgFixBounds::marketDataSnapshot_msgType) == 0){
-			l_nextRelevantMsgFix = getFollowingRelevantMsgFixAfterMarketDataSnapshot(a_currentMsgFix, a_document);
-		} else if(strcmp(l_currentMsgType, MsgFixBounds::marketDataResponse_msgType) == 0){
-			l_nextRelevantMsgFix = getFollowingRelevantMsgFixAfterMarketDataResponse(a_currentMsgFix, a_document);
+			l_nextRelevantMsgFix = AbstractDocumentHelper::getFollowingRelevantMsgFixAfterMarketDataRequestReject(a_msgFixList, a_currentMsgFixIndex, a_document);
+		} else if(strcmp(l_currentMsgType, MsgFixBounds::marketDataFullSnapshot_msgType) == 0){
+			l_nextRelevantMsgFix = AbstractDocumentHelper::getFollowingRelevantMsgFixAfterMarketDataSnapshot(a_msgFixList, a_currentMsgFixIndex, a_document);
 		} else if(strcmp(l_currentMsgType, MsgFixBounds::newOrderSingle_msgType) == 0){
-			l_nextRelevantMsgFix = getFollowingRelevantMsgFixAfterNewOrderSingle(a_currentMsgFix, a_document);
+			l_nextRelevantMsgFix = AbstractDocumentHelper::getFollowingRelevantMsgFixAfterNewOrderSingle(a_msgFixList, a_currentMsgFixIndex, a_document);
 		}
 	}
 	if(l_nextRelevantMsgFix != NULL){
 		return l_nextRelevantMsgFix;
 	}
-	l_nextRelevantMsgFix = getFollowingMsgFixBasedOnSymbol(a_msgFixList, a_currentMsgFixIndex, a_document);
+	l_nextRelevantMsgFix = AbstractDocumentHelper::getFollowingMsgFixBasedOnSymbol(a_msgFixList, a_currentMsgFixIndex, a_document);
 	if(l_nextRelevantMsgFix != NULL){
 		return l_nextRelevantMsgFix;
-	}*/
+	}
 	return NULL;
 }
 
