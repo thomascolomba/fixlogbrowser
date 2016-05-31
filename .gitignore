@@ -2,7 +2,7 @@
 *.o
 
 # Compiled Dynamic libraries
-*.dll
+#*.dll
 
 # Compiled Static libraries
 *.a
