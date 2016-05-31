@@ -182,6 +182,7 @@ unsigned int* AbstractDocumentHelper::getFollowingRelevantMsgFix(std::vector<Msg
 	unsigned int* l_nextRelevantMsgFix = NULL;
 	if(l_currentMsgType != NULL){//search next relevant message based on message type
 		if(strcmp(l_currentMsgType, MsgFixBounds::marketDataRequest_msgType) == 0){//market data request
+			printf("CASE market data request\n");
 			l_nextRelevantMsgFix = AbstractDocumentHelper::getFollowingRelevantMsgFixAfterMarketDataRequest(a_msgFixList, a_currentMsgFixIndex, a_document);
 		} else if(strcmp(l_currentMsgType, MsgFixBounds::marketDataRequestReject_msgType) == 0){
 			l_nextRelevantMsgFix = AbstractDocumentHelper::getFollowingRelevantMsgFixAfterMarketDataRequestReject(a_msgFixList, a_currentMsgFixIndex, a_document);
@@ -231,7 +232,7 @@ unsigned int* AbstractDocumentHelper::getFollowingRelevantMsgFixAfterMarketDataR
 		if(strcmp(b_msgType, MsgFixBounds::marketDataRequestReject_msgType) == 0 && strcmp(AbstractDocumentHelper::getFieldValue(a_msgFixList->at(b_msgFixIndex), a_document, MsgFixBounds::MDReqID_key), l_mdReqIdOfMDR) == 0){
 			//case mdrr
 			return new unsigned int(b_msgFixIndex);
-		} else if(strcmp(b_msgType, MsgFixBounds::marketDataFullSnapshot_msgType) == 0 && strcmp(AbstractDocumentHelper::getFieldValue(a_msgFixList->at(b_msgFixIndex), a_document, MsgFixBounds::MDReqID_key), l_mdReqIdOfMDR) == 0) {
+		} else if(strcmp(b_msgType, MsgFixBounds::marketDataFullSnapshot_msgType) == 0 && strcmp(AbstractDocumentHelper::getFieldValue(a_msgFixList->at(b_msgFixIndex), a_document, MsgFixBounds::MDReqID_key), l_mdReqIdOfMDR) == 0 && isARelevantMDSFound == false) {
 			//case mds
 			l_tmpLastRelevantMDSIndex = b_msgFixIndex;
 			isARelevantMDSFound = true;

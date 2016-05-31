@@ -509,7 +509,7 @@ bool test_getFollowingRelevantMsgFixAfterMarketDataRequestWithoutMarketDataRejec
 	l_lines->push_back("8=FIX...|35=W|262=00002|10=000|");
 	l_lines->push_back("8=FIX...|35=W|262=00002|10=000|");
 	AbstractDocument* l_document = new DocumentSimple(l_lines);
-	unsigned int l_expectedValue = 2;
+	unsigned int l_expectedValue = 1;
 	return performAGetFollowingRelevantMsgFixAfterMarketDataRequest(l_realMsgFixList, 0, *l_document, &l_expectedValue);
 }
 
@@ -657,7 +657,6 @@ bool testGetFollowingRelevantMsgFixAfterMarketDataSnapshot(){
 		printf("fail test test_getFollowingRelevantMsgFixAfterMarketDataSnapshotWithoutMarketDataRequestReject\n");
 		return false;
 	}
-
 	if(test_getFollowingRelevantMsgFixAfterMarketDataSnapshotWithTwoMarketDataRequestReject() == false){
 		printf("fail test test_getFollowingRelevantMsgFixAfterMarketDataSnapshotWithTwoMarketDataRequestReject\n");
 		return false;
@@ -676,12 +675,10 @@ bool testGetFollowingRelevantMsgFixAfterMarketDataRequest(){
 		printf("fail test test_getFollowingRelevantMsgFixAfterMarketDataRequestWithoutMarketDataRequestRejectWithoutMarketDataSnapshot\n");
 		return false;
 	}
-
 	if(test_getFollowingRelevantMsgFixAfterMarketDataRequestWithoutMarketDataRejectWithTwoMarketDataSnapshot() == false){
 		printf("fail test test_getFollowingRelevantMsgFixAfterMarketDataRequestWithoutMarketDataRejectWithTwoMarketDataSnapshot\n");
 		return false;
 	}
-
 	if(test_getFollowingRelevantMsgFixAfterMarketDataRequestWithTwoMarketDataRequestRejectWithoutMarketDataSnapshot() == false){
 		printf("fail test test_getFollowingRelevantMsgFixAfterMarketDataRequestWithTwoMarketDataRequestRejectWithoutMarketDataSnapshot\n");
 		return false;

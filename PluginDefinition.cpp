@@ -90,7 +90,7 @@ void highlightText(int a_startPosition, int a_endPosition){
 }
 
 void highlightMsgFix(MsgFixBounds* a_msgFixBounds){
-	highlightText(a_msgFixBounds->getStartPosition(), a_msgFixBounds->getEndPosition());
+	highlightText(a_msgFixBounds->getStartPosition(), a_msgFixBounds->getEndPosition()+1);
 }
 
 void highlighting(){
@@ -193,10 +193,10 @@ void goToFollowingRelevantMessage(){
 	//2)is there a fix msg on the current line ?
 	int currentLine = ::SendMessage(nppData._nppHandle, NPPM_GETCURRENTLINE, 0, 0);// Line position of the cursor in the editor
 	long startPositionOfTheCurrentLine = l_document->getStartPositionOfLine(currentLine);
-	printf("---currentLine = %i\n", currentLine);
-	printf("---startPositionOfTheCurrentLine = %i\n", startPositionOfTheCurrentLine);
+	//printf("---currentLine = %i\n", currentLine);
+	//printf("---startPositionOfTheCurrentLine = %i\n", startPositionOfTheCurrentLine);
 	char* l_lineContent = l_document->getLine(currentLine);
-	printf("---l_lineContent = %s\n", l_lineContent);
+	//printf("---l_lineContent = %s\n", l_lineContent);
 	//MsgFixBounds* l_currentMsgFix = AbstractDocumentHelper::extractMsgFixBoundsFromLine(l_lineContent, (long)currentLine);//(long)startPositionOfTheCurrentLine);
 	MsgFixBounds* l_currentMsgFix = AbstractDocumentHelper::extractMsgFixBoundsFromLine(l_lineContent, (long)startPositionOfTheCurrentLine);
 	if(l_currentMsgFix == NULL){
@@ -209,10 +209,20 @@ void goToFollowingRelevantMessage(){
 	for(unsigned int b_indexFixMsg = 0; b_indexFixMsg < l_msgFixList->size(); b_indexFixMsg++){
 		if((*l_currentMsgFix)==*(l_msgFixList->at(b_indexFixMsg))){
 			l_indexOfCurrentMsg = b_indexFixMsg;
-			printf("current msg found : %i\n", l_indexOfCurrentMsg);
+			//printf("corresponding msg found : %s\n", l_document->getMsgFixContent(l_msgFixList->at(b_indexFixMsg)));
 		}
 	}
 	//4)search following relevant msg
+	unsigned int*l_indexFollowingRelevantMsg = AbstractDocumentHelper::getFollowingRelevantMsgFix(l_msgFixList, l_indexOfCurrentMsg, *l_document);
+	if(l_indexFollowingRelevantMsg == NULL){
+		printf("No fix msg on this document");
+		return;
+	}
+	//printf("l_indexFollowingRelevantMsg = %i\n",*l_indexFollowingRelevantMsg);
+	printf("following relevant msg : %s\n",l_document->getMsgFixContent(l_msgFixList->at(*l_indexFollowingRelevantMsg)));
+	//highlighting next message
+	highlightMsgFix(l_msgFixList->at(*l_indexFollowingRelevantMsg));
+	printf("end of highlighting\n");
 
 }
 
@@ -310,7 +320,7 @@ void commandMenuInit()
 	shortcutForFeat11->_isAlt = true;
 	shortcutForFeat11->_isCtrl = false;
 	shortcutForFeat11->_isShift = false;
-	shortcutForFeat11->_key = 0x48;//N
+	shortcutForFeat11->_key = 0x4E;//N
 	setCommand(10, TEXT("Go to following relevant message"), goToFollowingRelevantMessage, shortcutForFeat11, false);
     
 }
