@@ -51,15 +51,4 @@ unit_test.exe: TestDocument.o MsgFixBounds.o AbstractDocumentHelper.o DocumentSi
 TestDocument.o: TestDocument.cpp
 	$(CXX)  -o TestDocument.o -c TestDocument.cpp $(CXXFLAGS)
 
-publish_plugin:deploy
-	cp $(DLL) ./plugin_published/
-
-
-
-
-
-
-
-
-
 
