@@ -512,7 +512,7 @@ bool test_getFollowingRelevantMsgFixAfterMarketDataRequestWithoutMarketDataRejec
 	l_lines->push_back("8=FIX...|35=W|262=00002|10=000|");
 	l_lines->push_back("8=FIX...|35=W|262=00002|10=000|");
 	AbstractDocument* l_document = new DocumentSimple(l_lines);
-	unsigned int l_expectedValue = 1;
+	unsigned int l_expectedValue = 2;
 	return performAGetFollowingRelevantMsgFixAfterMarketDataRequest(l_realMsgFixList, 0, *l_document, &l_expectedValue);
 }
 

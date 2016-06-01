@@ -231,7 +231,7 @@ unsigned int* AbstractDocumentHelper::getFollowingRelevantMsgFixAfterMarketDataR
 		if(strcmp(b_msgType, MsgFixBounds::marketDataRequestReject_msgType) == 0 && strcmp(AbstractDocumentHelper::getFieldValue(a_msgFixList->at(b_msgFixIndex), a_document, MsgFixBounds::MDReqID_key), l_mdReqIdOfMDR) == 0){
 			//case mdrr
 			return new unsigned int(b_msgFixIndex);
-		} else if(strcmp(b_msgType, MsgFixBounds::marketDataFullSnapshot_msgType) == 0 && strcmp(AbstractDocumentHelper::getFieldValue(a_msgFixList->at(b_msgFixIndex), a_document, MsgFixBounds::MDReqID_key), l_mdReqIdOfMDR) == 0 && isARelevantMDSFound == false) {
+		} else if(strcmp(b_msgType, MsgFixBounds::marketDataFullSnapshot_msgType) == 0 && strcmp(AbstractDocumentHelper::getFieldValue(a_msgFixList->at(b_msgFixIndex), a_document, MsgFixBounds::MDReqID_key), l_mdReqIdOfMDR) == 0) {
 			//case mds
 			l_tmpLastRelevantMDSIndex = b_msgFixIndex;
 			isARelevantMDSFound = true;

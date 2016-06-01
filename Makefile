@@ -28,7 +28,7 @@ AbstractDocumentHelper.o: AbstractDocumentHelper.cpp AbstractDocumentHelper.h Ab
 DocumentSimple.o: DocumentSimple.cpp DocumentSimple.h AbstractDocument.h
 	$(CXX) -o $@ -c DocumentSimple.cpp $(CXXFLAGS)
 
-.PHONY: clean mrproper deploy execute unit_test.exe publish_plugin
+.PHONY: clean mrproper deploy execute unit_test.exe
 
 clean:
 	rm -rf *.o
