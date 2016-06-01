@@ -309,14 +309,6 @@
 						<useDefaultCommand>false</useDefaultCommand>
 						<runAllBuilders>true</runAllBuilders>
 					</target>
-					<target name="publish_plugin" path="" targetID="org.eclipse.cdt.build.MakeTargetBuilder">
-						<buildCommand>mingw32-make</buildCommand>
-						<buildArguments/>
-						<buildTarget>publish_plugin</buildTarget>
-						<stopOnError>true</stopOnError>
-						<useDefaultCommand>false</useDefaultCommand>
-						<runAllBuilders>true</runAllBuilders>
-					</target>
 				</buildTargets>
 			</storageModule>
 		</cconfiguration>

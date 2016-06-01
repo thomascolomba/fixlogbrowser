@@ -6,11 +6,11 @@ CXX=wine mingw32-c++.exe
 CXXFLAGS=-W -Wall -Wno-write-strings -DUNICODE -Wunused-parameter
 LDFLAGS=-shared -Wl,--out-implib,my_plugin_dll.a
 LDLIBS=
-DLL=my_plugin.dll
+DLL=fixlogbrowser.dll
 
 all:deploy
 
-my_plugin.dll: NppPluginDemo.o PluginDefinition.o MsgFixBounds.o NppDocument.o AbstractDocumentHelper.o
+fixlogbrowser.dll: NppPluginDemo.o PluginDefinition.o MsgFixBounds.o NppDocument.o AbstractDocumentHelper.o
 	$(CXX)  -o $@ $^ $(LDFLAGS)
 
 NppPluginDemo.o: NppPluginDemo.cpp PluginDefinition.h
