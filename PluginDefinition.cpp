@@ -112,7 +112,7 @@ void extractMessage(char* a_msgType)
 
 	std::vector<MsgFixBounds*>* l_fixMsgList = AbstractDocumentHelper::extractMsgFixFromDocumentByMsgType(*l_document, a_msgType);
 	if(l_fixMsgList == NULL){
-		printf("null\n");
+		//printf("null\n");
 		return;
 	}
 	//MsgFixBounds::printToConsole(l_fixMsgList);
@@ -187,7 +187,7 @@ void goToFollowingRelevantMessage(){
 	AbstractDocument* l_document = new NppDocument(nppData);
 	std::vector<MsgFixBounds*>* l_msgFixList = AbstractDocumentHelper::extractAllMsgFixFromDocument(*l_document);
 	if(l_msgFixList == NULL){
-		printf("No fix msg on this document");
+		::MessageBox(NULL, TEXT("No fix msg on this document"), TEXT("No fix msg on this document"), MB_OK);
 		return;
 	}
 	//2)is there a fix msg on the current line ?
@@ -200,7 +200,7 @@ void goToFollowingRelevantMessage(){
 	//MsgFixBounds* l_currentMsgFix = AbstractDocumentHelper::extractMsgFixBoundsFromLine(l_lineContent, (long)currentLine);//(long)startPositionOfTheCurrentLine);
 	MsgFixBounds* l_currentMsgFix = AbstractDocumentHelper::extractMsgFixBoundsFromLine(l_lineContent, (long)startPositionOfTheCurrentLine);
 	if(l_currentMsgFix == NULL){
-		printf("No fix message on the current line");
+		::MessageBox(NULL, TEXT("No fix message on the current line"), TEXT("No fix message on the current line"), MB_OK);
 		return;
 	}
 	MsgFixBounds::printToConsole(l_currentMsgFix);
@@ -215,14 +215,14 @@ void goToFollowingRelevantMessage(){
 	//4)search following relevant msg
 	unsigned int*l_indexFollowingRelevantMsg = AbstractDocumentHelper::getFollowingRelevantMsgFix(l_msgFixList, l_indexOfCurrentMsg, *l_document);
 	if(l_indexFollowingRelevantMsg == NULL){
-		printf("No fix msg on this document");
+		::MessageBox(NULL, TEXT("No following relevant fix message right now"), TEXT("No following relevant fix message right now"), MB_OK);
 		return;
 	}
 	//printf("l_indexFollowingRelevantMsg = %i\n",*l_indexFollowingRelevantMsg);
-	printf("following relevant msg : %s\n",l_document->getMsgFixContent(l_msgFixList->at(*l_indexFollowingRelevantMsg)));
+	//printf("following relevant msg : %s\n",l_document->getMsgFixContent(l_msgFixList->at(*l_indexFollowingRelevantMsg)));
 	//highlighting next message
 	highlightMsgFix(l_msgFixList->at(*l_indexFollowingRelevantMsg));
-	printf("end of highlighting\n");
+	//printf("end of highlighting\n");
 
 }
 
@@ -247,14 +247,14 @@ void commandMenuInit()
     //            ShortcutKey *shortcut,          // optional. Define a shortcut to trigger this command
     //            bool check0nInit                // optional. Make this menu item be checked visually
     //            );
-    printf("TCO on initialise les commandes");
+    //printf("TCO on initialise les commandes");
 
     ShortcutKey* shortcutForFeat1 = new ShortcutKey;
     shortcutForFeat1->_isAlt = true;
     shortcutForFeat1->_isCtrl = false;
     shortcutForFeat1->_isShift = false;
     shortcutForFeat1->_key = 0x56;//V
-    setCommand(0, TEXT("Extract MDR and CMDR"), extractMDRAndCMDR, shortcutForFeat1, false);
+    setCommand(0, TEXT("Extract MDR"), extractMDRAndCMDR, shortcutForFeat1, false);
 
     ShortcutKey* shortcutForFeat2 = new ShortcutKey;
     shortcutForFeat2->_isAlt = true;
